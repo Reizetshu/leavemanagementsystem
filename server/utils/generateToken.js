@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken'); // Import jsonwebtoken
-const dotenv = require('dotenv').config(); // Import and Load dotenv to load environment variables
+const dotenv = require('dotenv'); // Import and dotenv to load environment variables
+
+// Load environment variables from .env file
+dotenv.config();
 
 // Function to generate a JSON Web Token
 const generateToken = (id) => {
