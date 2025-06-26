@@ -1,6 +1,8 @@
 const express = require('express'); // Import the Express.js framework
 const dotenv = require('dotenv'); // Import dotenv to load environment variables
 const connectDB = require('./config/db'); // Import the database connection function
+const authRoutes = require('./routes/authRoutes'); // Import the authentication routes
+const userRoutes = require('./routes/userRoutes'); // Import the role-based routes
 
 // Load environment variables
 dotenv.config();
@@ -18,6 +20,12 @@ app.use(express.json());
 app.get('/', (req, res) => {
   res.send('App is running...');
 });
+
+// Mount authentication routes
+app.use('/api/auth', authRoutes);
+
+// Mount role-based routes
+app.use('/api/users', userRoutes);
 
 // Define the port the server will listen on.
 // Use the PORT from environment variables, or default to 5000 if not set.

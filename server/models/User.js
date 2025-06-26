@@ -1,5 +1,4 @@
 const mongoose = require('mongoose'); // Import Mongoose
-const bcrypt = require('bcryptjs'); // Import bcryptjs for password hashing
 
 // Define the User schema
 const userSchema = mongoose.Schema(
@@ -45,24 +44,9 @@ const userSchema = mongoose.Schema(
     ],
   },
   {
-    timestamps: true, // Adds createdAt amd updatedAt fields automatically
+    timestamps: true, // Adds createdAt and updatedAt fields automatically
   }
 );
-
-// Middleware to hash password before saving a new user or when password is modified
-userSchema.pre('save', async (next) => {
-  if (!this.isModified('password')) {
-    next(); // Only run if password was actually modified
-  }
-  const salt = await bcrypt.genSalt(10); // Generate salt
-  this.password = await bcrypt.hast(this.password, salt); // Hash password
-  next();
-});
-
-// Method to compare entered password with hashed password in the database
-userSchema.methods.matchPassword = async (enteredPassword) => {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
 
 // Create and export the User model
 const User = mongoose.model('User', userSchema);
