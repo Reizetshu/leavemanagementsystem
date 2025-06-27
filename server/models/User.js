@@ -28,6 +28,10 @@ const userSchema = mongoose.Schema(
       enum: ['employee', 'admin'], // Allowed roles: employee and admin only
       default: 'employee', // Default role for new users
     },
+    isActive: {
+      type: Boolean,
+      default: true, // Users are active by default
+    },
 
     leaveBalance: [
       // Array to store leave balance for different leave types
