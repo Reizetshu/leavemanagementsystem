@@ -21,6 +21,6 @@ router
   .route('/:id')
   .get(verifyToken, authorizeRoles('admin'), getLeaveTypeById) // GET /api/leave-types/:id (get single)
   .put(verifyToken, authorizeRoles('admin'), updateLeaveType) // PUT /api/leave-types/:id (update)
-  .put(verifyToken, authorizeRoles('admin'), deleteLeaveType); // DELETE /api/leave-types/:id (delete)
+  .delete(verifyToken, authorizeRoles('admin'), deleteLeaveType); // DELETE /api/leave-types/:id (delete)
 
 module.exports = router;

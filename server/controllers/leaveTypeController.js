@@ -49,6 +49,7 @@ const getAllLeaveTypes = async (req, res) => {
   try {
     // Fetch all leave types from database
     const leaveTypes = await LeaveType.find({});
+    res.json(leaveTypes);
   } catch (error) {
     console.error(error);
     res
@@ -86,7 +87,7 @@ const updateLeaveType = async (req, res) => {
 
   try {
     // Find the leave type by ID
-    const leaveType = await LeaveType.findOne(req.params.id);
+    const leaveType = await LeaveType.findById(req.params.id);
 
     if (leaveType) {
       // Check if the new name clashes with an existing leave type (excluding itself
@@ -133,6 +134,7 @@ const deleteLeaveType = async (req, res) => {
     if (leaveType) {
       // Delete the leave type by ID
       await leaveType.deleteOne(); // Use deleteOne for Mongoose 6+
+      res.json({ message: 'Leave type removed' });
     } else {
       res.status(404).json({ message: 'Leave type not found' });
     }

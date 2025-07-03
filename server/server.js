@@ -29,7 +29,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 
 // Mount leave type routes
-app.use('/api/leave-type', leaveTypeRoutes);
+app.use('/api/leave-types', leaveTypeRoutes);
 
 // Define the port the server will listen on.
 // Use the PORT from environment variables, or default to 5000 if not set.
