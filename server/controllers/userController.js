@@ -82,7 +82,6 @@ const updateUser = async (req, res) => {
       // Note: leaveBalance should ideally be managed through leave request approvals,
       // not directly via this update endpoint. For now, we won't directly update it here.
       // If direct balance adjustment is needed, a separate dedicated endpoint should be considered.
-
       const updatedUser = await user.save();
       res.json({
         _id: updatedUser._id,
