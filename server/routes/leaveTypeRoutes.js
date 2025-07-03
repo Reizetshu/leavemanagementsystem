@@ -7,8 +7,8 @@ const {
   updateLeaveType,
   deleteLeaveType,
 } = require('../controllers/leaveTypeController');
-const { verifyToken } = require('../middlewares/authMiddleware'); // Import verifyToken middleware
-const { authorizeRoles } = require('../middlewares/roleMiddleware'); // Import authorizeRoles middleware
+const verifyToken = require('../middlewares/authMiddleware'); // Import verifyToken middleware
+const authorizeRoles = require('../middlewares/roleMiddleware'); // Import authorizeRoles middleware
 
 // Routes for Admin Leave type management
 // Apply 'verifyToken' and 'authorizeRoles' to all these routes
