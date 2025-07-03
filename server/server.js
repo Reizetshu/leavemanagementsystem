@@ -3,6 +3,7 @@ const dotenv = require('dotenv'); // Import dotenv to load environment variables
 const connectDB = require('./config/db'); // Import the database connection function
 const authRoutes = require('./routes/authRoutes'); // Import the authentication routes
 const userRoutes = require('./routes/userRoutes'); // Import the role-based routes
+const leaveTypeRoutes = require('./routes/leaveTypeRoutes'); // Import the leave type routes
 
 // Load environment variables
 dotenv.config();
@@ -26,6 +27,9 @@ app.use('/api/auth', authRoutes);
 
 // Mount role-based routes
 app.use('/api/users', userRoutes);
+
+// Mount leave type routes
+app.use('/api/leave-type', leaveTypeRoutes);
 
 // Define the port the server will listen on.
 // Use the PORT from environment variables, or default to 5000 if not set.
