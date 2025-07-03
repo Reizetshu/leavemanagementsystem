@@ -12,7 +12,7 @@ const getAllUsers = async (req, res) => {
     const users = await User.find({ isActive: true }).select('-password');
     res.json(users);
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: 'Server Error: Could not fetch users' });
   }
 };
@@ -34,7 +34,7 @@ const getUserById = async (req, res) => {
       res.status(404).json({ message: 'User not found or is inactive' });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(500).json({ message: 'Server Error: Could not fetch user' });
   }
 };

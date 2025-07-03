@@ -49,7 +49,7 @@ const registerUser = async (req, res) => {
     await user.save();
     res.status(201).json({ message: 'User is successfully created' });
   } catch (error) {
-    console.error(err);
+    console.error(error);
     res.status(500).json({ message: 'Server error during registration' });
   }
 };
