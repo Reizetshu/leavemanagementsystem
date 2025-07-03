@@ -19,7 +19,7 @@ const validatePassword = (password) => {
   // [A-Za-z\d!@#$%^&*()_+]{6,} - Minimum 6 characters (using the allowed characters)
   // $                 - end of string
   const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{6,}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+.])[A-Za-z\d!@#$%^&*()_+.]{6,}$/;
 
   if (!password) {
     return 'Password cannot be empty.';
