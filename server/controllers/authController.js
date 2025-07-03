@@ -12,7 +12,15 @@ dotenv.config();
 // @access Public
 const registerUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, password, role } = req.body;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      role,
+      worksOnSaturday,
+      worksOnSunday,
+    } = req.body;
 
     // Basic validation if fields left empty
     if (!firstName || !lastName || !email || !password || !role) {
@@ -44,6 +52,8 @@ const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       role: role || 'employee', // Default role to 'employee' if not provided
+      worksOnSaturday: worksOnSaturday || false, // Set default or provided value
+      worksOnSunday: worksOnSunday || false, // Set default or provided value
     });
 
     await user.save();
@@ -104,6 +114,8 @@ const getMe = async (req, res) => {
       lastName: req.user.lastName,
       email: req.user.email,
       role: req.user.role,
+      worksOnSaturday: req.user.worksOnSaturday,
+      worksOnSunday: req.user.worksOnSunday,
       leaveBalance: req.user.leaveBalance,
     });
   } else {

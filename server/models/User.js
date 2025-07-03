@@ -32,7 +32,14 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: true, // Users are active by default
     },
-
+    worksOnSaturday: {
+      type: Boolean,
+      default: false,
+    },
+    worksOnSunday: {
+      type: Boolean,
+      default: false,
+    },
     leaveBalance: [
       // Array to store leave balance for different leave types
       {

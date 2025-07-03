@@ -79,6 +79,14 @@ const updateUser = async (req, res) => {
         user.isActive = req.body.isActive;
       }
 
+      // Update worksOnSaturday and worksOnSunday
+      if (typeof req.body.worksOnSaturday === 'boolean') {
+        user.worksOnSaturday = req.body.worksOnSaturday;
+      }
+      if (typeof req.body.worksOnSunday === 'boolean') {
+        user.worksOnSunday = req.body.worksOnSunday;
+      }
+
       // Note: leaveBalance should ideally be managed through leave request approvals,
       // not directly via this update endpoint. For now, we won't directly update it here.
       // If direct balance adjustment is needed, a separate dedicated endpoint should be considered.
@@ -90,6 +98,8 @@ const updateUser = async (req, res) => {
         email: updatedUser.email,
         role: updatedUser.role,
         isActive: updatedUser.isActive,
+        worksOnSaturday: updatedUser.worksOnSaturday,
+        worksOnSunday: updatedUser.worksOnSunday,
       });
     } else {
       res.status(404).json({ message: 'User not found or is inactive' });
@@ -120,4 +130,40 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { getAllUsers, getUserById, updateUser, deleteUser };
+// @desc    Reset user password to a default value (Admin only)
+// @route   PUT /api/users/:id/reset-password
+// @access  Private/Admin
+const resetUserPassword = async (req, res) => {
+  try {
+    // Find the user by ID and ensure they are active
+    const user = await User.findOne({ _id: req.params.id, isActive: true });
+
+    if (user) {
+      // Define a default password
+      const defaultPassword = 'Password1234.'; // Make this configurable or generate a random one
+      // Hash the default password
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(defaultPassword, salt);
+
+      await user.save(); // Save the user with the new hashed password
+      res.json({
+        message: `Password for user ${user.email} has been reset to default.`,
+      });
+    } else {
+      res.status(404).json({ message: 'User not found or is inactive' });
+    }
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: 'Server Error: Could not rer user password' });
+  }
+};
+
+module.exports = {
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+  resetUserPassword,
+};

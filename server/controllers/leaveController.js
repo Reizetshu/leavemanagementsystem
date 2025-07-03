@@ -3,13 +3,15 @@ const User = require('../models/User'); // Import the User model (to get user ID
 const LeaveType = require('../models/LeaveType'); // Import LeaveType model (to validate leave type)
 
 /**
- * Helper function to get all working days between two dates.
- * Excludes Saturdays and Sundays.
+ * Helper function to get all working days between two dates for a specific user.
+ * Considers user's worksOnSaturday and worksOnSunday preferences.
  * @param {Date} startDate
  * @param {Date} endDate
+ * @param {boolean} worksOnSaturday Flag indicating if the user works on Saturdays.
+ * @param {boolean} worksOnSunday Flag indicating if the user works on Sundays.
  * @returns {Array<Object>} Array of objects, each containing a { date: Date, dayType: 'full' }
  */
-const getWorkingDays = (startDate, endDate) => {
+const getWorkingDays = (startDate, endDate, worksOnSaturday, worksOnSunday) => {
   const days = [];
   let currentDate = new Date(startDate);
   currentDate.setHours(0, 0, 0, 0); // Normalize to start of day
@@ -17,9 +19,16 @@ const getWorkingDays = (startDate, endDate) => {
   const end = new Date(endDate);
   end.setHours(0, 0, 0, 0); // Normalize to start of day
 
-  while (current <= end) {
+  while (currentDate <= end) {
     const dayOfWeek = currentDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-    if (dayOfWeek !== 0 && dayOfWeek !== 6) {
+    // Check if it's a weekday (Monday-Friday) OR
+    // if it's Saturday and the user works on Saturday OR
+    // if it's Sunday and the user works on Sunday
+    if (
+      (dayOfWeek >= 1 && dayOfWeek <= 5) || // Monday to Friday
+      (dayOfWeek === 6 && worksOnSaturday) || // Saturday and user works on Saturday
+      (dayOfWeek === 0 && worksOnSunday) // Sunday and user works on Sunday) {
+    ) {
       days.push({
         date: new Date(currentDate),
         isHalfDay: false,
@@ -36,7 +45,7 @@ const getWorkingDays = (startDate, endDate) => {
 // @access Private (Employee)
 const requestLeave = async (req, res) => {
   // req.user is populated by the verifyToken middleware
-  const { _id: userId } = req.user; // Get the ID of the authenticated user
+  const { _id: userId, worksOnSaturday, worksOnSunday } = req.user; // Get user ID and new working day preferences
   const { leaveType: leaveTypeById, startDate, endDate, reason } = req.body;
 
   // Basic validation
@@ -64,8 +73,13 @@ const requestLeave = async (req, res) => {
       return res.status(404).json({ message: 'Invalid Leave Type specified' });
     }
 
-    // Calculate working days for the leave request
-    const leaveDays = getWorkingDays(parsedStartDate, parsedEndDate);
+    // Calculate working days for the leave request, passing user's work preferences
+    const leaveDays = getWorkingDays(
+      parsedStartDate,
+      parsedEndDate,
+      worksOnSaturday,
+      worksOnSunday
+    );
 
     if (leaveDays.length === 0) {
       return res.status(400).json({
