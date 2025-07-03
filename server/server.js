@@ -4,6 +4,7 @@ const connectDB = require('./config/db'); // Import the database connection func
 const authRoutes = require('./routes/authRoutes'); // Import the authentication routes
 const userRoutes = require('./routes/userRoutes'); // Import the role-based routes
 const leaveTypeRoutes = require('./routes/leaveTypeRoutes'); // Import the leave type routes
+const leaveRoutes = require('./routes/leaveRoutes'); // Import the leave routes
 
 // Load environment variables
 dotenv.config();
@@ -30,6 +31,9 @@ app.use('/api/users', userRoutes);
 
 // Mount leave type routes
 app.use('/api/leave-types', leaveTypeRoutes);
+
+// Mount leave routes
+app.use('/api/leave', leaveRoutes);
 
 // Define the port the server will listen on.
 // Use the PORT from environment variables, or default to 5000 if not set.
