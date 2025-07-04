@@ -4,14 +4,13 @@ const LeaveType = require('../models/LeaveType'); // Import LeaveType model (to 
 
 /**
  * Helper function to get all working days between two dates for a specific user.
- * Considers user's worksOnSaturday and worksOnSunday preferences.
+ * Considers user's individual working day preferences (Monday-Sunday).
  * @param {Date} startDate
  * @param {Date} endDate
- * @param {boolean} worksOnSaturday Flag indicating if the user works on Saturdays.
- * @param {boolean} worksOnSunday Flag indicating if the user works on Sundays.
+ * @param {Object} userWorkPreferences Object containing boolean flags for worksOnMonday, ..., worksOnSunday.
  * @returns {Array<Object>} Array of objects, each containing a { date: Date, dayType: 'full' }
  */
-const getWorkingDays = (startDate, endDate, worksOnSaturday, worksOnSunday) => {
+const getWorkingDays = (startDate, endDate, userWorkPreferences) => {
   const days = [];
   let currentDate = new Date(startDate);
   currentDate.setHours(0, 0, 0, 0); // Normalize to start of day
@@ -21,16 +20,35 @@ const getWorkingDays = (startDate, endDate, worksOnSaturday, worksOnSunday) => {
 
   while (currentDate <= end) {
     const dayOfWeek = currentDate.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-    // Check if it's a weekday (Monday-Friday) OR
-    // if it's Saturday and the user works on Saturday OR
-    // if it's Sunday and the user works on Sunday
-    if (
-      (dayOfWeek >= 1 && dayOfWeek <= 5) || // Monday to Friday
-      (dayOfWeek === 6 && worksOnSaturday) || // Saturday and user works on Saturday
-      (dayOfWeek === 0 && worksOnSunday) // Sunday and user works on Sunday) {
-    ) {
+    let isWorkingDay = false;
+    switch (dayOfWeek) {
+      case 0: // Sunday
+        isWorkingDay = userWorkPreferences.worksOnSunday;
+        break;
+      case 1: // Monday
+        isWorkingDay = userWorkPreferences.worksOnMonday;
+        break;
+      case 2: // Tuesday
+        isWorkingDay = userWorkPreferences.worksOnTuesday;
+        break;
+      case 3: // Wednesday
+        isWorkingDay = userWorkPreferences.worksOnWednesday;
+        break;
+      case 4: // Thursday
+        isWorkingDay = userWorkPreferences.worksOnThursday;
+        break;
+      case 5: // Friday
+        isWorkingDay = userWorkPreferences.worksOnFriday;
+        break;
+      case 6: // Saturday
+        isWorkingDay = userWorkPreferences.worksOnSaturday;
+        break;
+      default:
+        isWorkingDay = false; // Should not happen
+    }
+    if (isWorkingDay) {
       days.push({
-        date: new Date(currentDate),
+        date: new Date(currentDate), // Push a new Date object to avoid reference issues
         isHalfDay: false,
         dayType: 'full',
       });
@@ -45,7 +63,17 @@ const getWorkingDays = (startDate, endDate, worksOnSaturday, worksOnSunday) => {
 // @access Private (Employee)
 const requestLeave = async (req, res) => {
   // req.user is populated by the verifyToken middleware
-  const { _id: userId, worksOnSaturday, worksOnSunday } = req.user; // Get user ID and new working day preferences
+  const {
+    _id: userId,
+    worksOnMonday,
+    worksOnTuesday,
+    worksOnWednesday,
+    worksOnThursday,
+    worksOnFriday,
+    worksOnSaturday,
+    worksOnSunday,
+  } = req.user; // Get user ID and all working day preferences
+
   const { leaveType: leaveTypeById, startDate, endDate, reason } = req.body;
 
   // Basic validation
@@ -73,12 +101,22 @@ const requestLeave = async (req, res) => {
       return res.status(404).json({ message: 'Invalid Leave Type specified' });
     }
 
+    // Prepare user's work preferences object
+    const userWorkPreferences = {
+      worksOnMonday,
+      worksOnTuesday,
+      worksOnWednesday,
+      worksOnThursday,
+      worksOnFriday,
+      worksOnSaturday,
+      worksOnSunday,
+    };
+
     // Calculate working days for the leave request, passing user's work preferences
     const leaveDays = getWorkingDays(
       parsedStartDate,
       parsedEndDate,
-      worksOnSaturday,
-      worksOnSunday
+      userWorkPreferences
     );
 
     if (leaveDays.length === 0) {

@@ -32,6 +32,26 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: true, // Users are active by default
     },
+    worksOnMonday: {
+      type: Boolean,
+      default: true,
+    },
+    worksOnTuesday: {
+      type: Boolean,
+      default: true,
+    },
+    worksOnWednesday: {
+      type: Boolean,
+      default: true,
+    },
+    worksOnThursday: {
+      type: Boolean,
+      default: true,
+    },
+    worksOnFriday: {
+      type: Boolean,
+      default: true,
+    },
     worksOnSaturday: {
       type: Boolean,
       default: false,

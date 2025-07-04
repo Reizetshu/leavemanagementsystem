@@ -18,6 +18,11 @@ const registerUser = async (req, res) => {
       email,
       password,
       role,
+      worksOnMonday,
+      worksOnTuesday,
+      worksOnWednesday,
+      worksOnThursday,
+      worksOnFriday,
       worksOnSaturday,
       worksOnSunday,
     } = req.body;
@@ -52,6 +57,12 @@ const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
       role: role || 'employee', // Default role to 'employee' if not provided
+      worksOnMonday: worksOnMonday !== undefined ? worksOnMonday : true, // Default to true if not provided
+      worksOnTuesday: worksOnTuesday !== undefined ? worksOnTuesday : true, // Default to true if not provided
+      worksOnWednesday:
+        worksOnWednesday !== undefined ? worksOnWednesday : true, // Default to true if not provided
+      worksOnThursday: worksOnThursday !== undefined ? worksOnThursday : true, // Default to true if not provided
+      worksOnFriday: worksOnFriday !== undefined ? worksOnFriday : true, // Default to true if not provided
       worksOnSaturday: worksOnSaturday || false, // Set default or provided value
       worksOnSunday: worksOnSunday || false, // Set default or provided value
     });
@@ -114,6 +125,11 @@ const getMe = async (req, res) => {
       lastName: req.user.lastName,
       email: req.user.email,
       role: req.user.role,
+      worksOnMonday: req.user.worksOnMonday,
+      worksOnTuesday: req.user.worksOnTuesday,
+      worksOnWednesday: req.user.worksOnWednesday,
+      worksOnThursday: req.user.worksOnThursday,
+      worksOnFriday: req.user.worksOnFriday,
       worksOnSaturday: req.user.worksOnSaturday,
       worksOnSunday: req.user.worksOnSunday,
       leaveBalance: req.user.leaveBalance,

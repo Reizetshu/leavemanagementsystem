@@ -79,6 +79,22 @@ const updateUser = async (req, res) => {
         user.isActive = req.body.isActive;
       }
 
+      // Update worksOnMonday to worksOnFriday
+      if (typeof req.body.worksOnMonday === 'boolean') {
+        user.worksOnMonday = req.body.worksOnMonday;
+      }
+      if (typeof req.body.worksOnTuesday === 'boolean') {
+        user.worksOnTuesday = req.body.worksOnTuesday;
+      }
+      if (typeof req.body.worksOnWednesday === 'boolean') {
+        user.worksOnWednesday = req.body.worksOnWednesday;
+      }
+      if (typeof req.body.worksOnThursday === 'boolean') {
+        user.worksOnThursday = req.body.worksOnThursday;
+      }
+      if (typeof req.body.worksOnFriday === 'boolean') {
+        user.worksOnFriday = req.body.worksOnFriday;
+      }
       // Update worksOnSaturday and worksOnSunday
       if (typeof req.body.worksOnSaturday === 'boolean') {
         user.worksOnSaturday = req.body.worksOnSaturday;
@@ -98,6 +114,11 @@ const updateUser = async (req, res) => {
         email: updatedUser.email,
         role: updatedUser.role,
         isActive: updatedUser.isActive,
+        worksOnMonday: updatedUser.worksOnMonday,
+        worksOnTuesday: updatedUser.worksOnTuesday,
+        worksOnWednesday: updatedUser.worksOnWednesday,
+        worksOnThursday: updatedUser.worksOnThursday,
+        worksOnFriday: updatedUser.worksOnFriday,
         worksOnSaturday: updatedUser.worksOnSaturday,
         worksOnSunday: updatedUser.worksOnSunday,
       });
