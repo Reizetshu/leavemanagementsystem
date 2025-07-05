@@ -8,6 +8,7 @@ const RegisterPage = () => {
     lastName: '',
     email: '',
     password: '',
+    confirmPassword: '',
     role: 'employee', // Default role
     worksOnMonday: true,
     worksOnTuesday: true,
@@ -35,14 +36,23 @@ const RegisterPage = () => {
     setSuccess('');
     setLoading(true);
 
+    // Password and Confirm Password validation
+    if (formData.password !== formData.confirmPassword) {
+      setError('Passwords do not match');
+      setLoading(false);
+    }
     try {
-      const res = await register(formData); // Call register function from context
+      // Destructure form to exclude confirmPassword before sending to backend
+      const { confirmPassword, ...dataToSend } = formData;
+      const res = await register(dataToSend); // Call register function from context
       setSuccess(res.message || 'Registration successful! You can now login');
+      // Clear form after successful registration
       setFormData({
         firstName: '',
         lastName: '',
         email: '',
         password: '',
+        confirmPassword: '',
         role: 'employee',
         worksOnMonday: true,
         worksOnTuesday: true,
@@ -167,7 +177,7 @@ const RegisterPage = () => {
             <button
               type='button' // Important: type="button" to prevent form submission
               onClick={togglePasswordVisibility}
-              className='absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer'
+              className='absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer mt-1'
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? (
@@ -188,6 +198,70 @@ const RegisterPage = () => {
                 </svg>
               ) : (
                 // Eye icon (show password)
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='w-5 h-5 text-gray-500'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z'
+                  />
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'
+                  />
+                </svg>
+              )}
+            </button>
+          </div>
+          <div className='relative'>
+            <label
+              htmlFor='confirmPassword'
+              className='block text-sm font-medium text-gray-700 mb-1'
+            >
+              Confirm Password
+            </label>
+            <input
+              type={showPassword ? 'text' : 'password'} // Dynamically set type (can be separate if desired)
+              id='confirmPassword'
+              name='confirmPassword'
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+              className='mt-1 block w-full px-4 py-2 pr-10 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm'
+            />
+            {/* You can add a separate toggle for confirm password if you want,
+                or reuse the same showPassword state as done here. */}
+            <button
+              type='button'
+              onClick={togglePasswordVisibility}
+              className='absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer mt-6'
+              aria-label={
+                showPassword ? 'Hide confirm password' : 'Show confirm password'
+              }
+            >
+              {showPassword ? (
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  strokeWidth={1.5}
+                  stroke='currentColor'
+                  className='w-5 h-5 text-gray-500'
+                >
+                  <path
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
+                    d='M3.98 8.223A10.477 10.477 0 0 0 1.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.5-.241.86-.57 1.7-.988 2.5ZM9.75 12a2.25 2.25 0 1 1 4.5 0 2.25 2.25 0 0 1-4.5 0Z'
+                  />
+                </svg>
+              ) : (
                 <svg
                   xmlns='http://www.w3.org/2000/svg'
                   fill='none'
