@@ -1,5 +1,6 @@
 const express = require('express'); // Import the Express.js framework
 const dotenv = require('dotenv'); // Import dotenv to load environment variables
+const cors = require('cors'); // Import cors middleware
 const connectDB = require('./config/db'); // Import the database connection function
 const authRoutes = require('./routes/authRoutes'); // Import the authentication routes
 const userRoutes = require('./routes/userRoutes'); // Import the role-based routes
@@ -14,6 +15,11 @@ connectDB();
 
 // Initialize the Express Application
 const app = express();
+
+// Use CORS middleware to allow cross-origin requests
+// This will allow all origins by default. For production, you might want to restrict it
+// to specific origins (e.g., cors({ origin: 'http://localhost:5173' }))
+app.use(cors());
 
 // Middleware to parse JSON request (for handling incoming request bodies)
 app.use(express.json());
