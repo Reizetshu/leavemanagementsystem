@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -58,22 +58,22 @@ const PublicRoute = ({ children }) => {
   return children; // Otherwise, render the public component (Login/Register)
 };
 function App() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 768); // State for sidebar visibility. 768px is Tailwind's 'md' breakpoint
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false); // State for sidebar visibility. 768px is Tailwind's 'md' breakpoint
 
-  // Effect to handle sidebar state on window resize
-  useEffect(() => {
-    const handleResize = () => {
-      // Set sidebar open if screen is 'md' or larger, otherwise close it
-      setIsSidebarOpen(window.innerWidth >= 768);
-    };
+  // // Effect to handle sidebar state on window resize
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     // Set sidebar open if screen is 'md' or larger, otherwise close it
+  //     setIsSidebarOpen(window.innerWidth >= 768);
+  //   };
 
-    window.addEventListener('resize', handleResize);
+  //   window.addEventListener('resize', handleResize);
 
-    // Cleanup the event listener on component unmount
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []); // Empty dependency array means this effect runs once on mount and cleans up on unmount
+  //   // Cleanup the event listener on component unmount
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, []); // Empty dependency array means this effect runs once on mount and cleans up on unmount
 
   // Function to toggle sidebar
   const toggleSidebar = () => {
